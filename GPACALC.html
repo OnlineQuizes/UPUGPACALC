@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UQU GPA Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #2a676f;
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #a98a50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .language-switcher:hover {
+            background: #927b43;
+        }
+
+        .university-logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2a676f;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .cumulative-gpa {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .cumulative-gpa h3 {
+            color: #2a676f;
+            margin-bottom: 15px;
+        }
+
+        .cumulative-inputs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .cumulative-inputs input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #a98a50;
+            border-radius: 6px;
+            font-size: 16px;
+            direction: ltr;
+        }
+
+        .course-list {
+            margin-bottom: 20px;
+        }
+
+        .course-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .subject-name {
+            flex: 2;
+            padding: 10px;
+            border: 2px solid #a98a50;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        select {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #a98a50;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            direction: ltr;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #a98a50;
+            border-radius: 8px;
+            font-size: 16px;
+            direction: ltr;
+        }
+
+        button {
+            background: #a98a50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #927b43;
+            transform: translateY(-2px);
+        }
+
+        .remove-btn {
+            background: #2a676f;
+            padding: 8px 15px;
+        }
+
+        .remove-btn:hover {
+            background: #1f4f56;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2a676f;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #a98a50;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .student-credit {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #a98a50;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        [dir="rtl"] .course-item,
+        [dir="rtl"] .cumulative-inputs {
+            flex-direction: row-reverse;
+        }
+
+        @media (max-width: 768px) {
+            .course-item, .cumulative-inputs {
+                flex-direction: column !important;
+            }
+
+            .subject-name,
+            select,
+            input[type="number"] {
+                width: 100%;
+            }
+
+            .student-credit {
+                position: static;
+                text-align: center;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="language-switcher" onclick="toggleLanguage()">
+                <span id="langText">English</span>
+            </button>
+            <img src="https://upload.wikimedia.org/wikipedia/ar/c/c3/Umm_Al-Qura_University_logo.png" 
+                 alt="UQU Logo" 
+                 class="university-logo">
+            <h1 data-i18n="title">UQU GPA Calculator</h1>
+        </div>
+
+        <div class="cumulative-gpa">
+            <h3 data-i18n="cumulative">Cumulative GPA Calculation</h3>
+            <div class="cumulative-inputs">
+                <input type="number" id="previousCredits" data-i18n-placeholder="prevCredits" placeholder="Previous Total Credits" min="0">
+                <input type="number" id="previousGPA" data-i18n-placeholder="prevGPA" placeholder="Previous GPA" min="0" max="4" step="0.01">
+            </div>
+        </div>
+
+        <div class="course-list" id="courseList">
+            <div class="course-item">
+                <input type="text" class="subject-name" data-i18n-placeholder="subject" placeholder="Subject name">
+                <select class="grade">
+                    <option value="4.0">A+</option>
+                    <option value="3.75">A</option>
+                    <option value="3.5">B+</option>
+                    <option value="3.0">B</option>
+                    <option value="2.5">C+</option>
+                    <option value="2.0">C</option>
+	            <option value="1.5">D+</option>
+                    <option value="1.0">D</option>
+                    <option value="0">F</option>
+                </select>
+                <input type="number" class="credits" data-i18n-placeholder="credits" placeholder="Credit Hours" min="1" value="3">
+                <button class="remove-btn" onclick="removeCourse(this)" data-i18n="remove">Remove</button>
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <button onclick="addCourse()" data-i18n="addCourse">Add Course</button>
+            <button onclick="calculateGPA()" data-i18n="calculate">Calculate GPA</button>
+        </div>
+
+        <div id="result"></div>
+        <div class="student-credit">صنع من طالب الى طالب</div>
+    </div>
+
+    <script>
+        let currentLang = 'ar';
+        const translations = {
+            en: {
+                title: "UQU GPA Calculator",
+                cumulative: "Cumulative GPA Calculation",
+                prevCredits: "Previous Total Credits",
+                prevGPA: "Previous GPA",
+                subject: "Subject name",
+                credits: "Credit Hours",
+                addCourse: "Add Course",
+                calculate: "Calculate GPA",
+                remove: "Remove",
+                semesterGPA: "Semester GPA",
+                cumulativeGPA: "Cumulative GPA",
+                totalCredits: "Total Credits"
+            },
+            ar: {
+                title: "حاسبة المعدل التراكمي - جامعة أم القرى",
+                cumulative: "حساب المعدل التراكمي",
+                prevCredits: "الساعات المجتازة السابقة",
+                prevGPA: "المعدل التراكمي السابق",
+                subject: "اسم المادة",
+                credits: "الساعات المعتمدة",
+                addCourse: "إضافة مادة",
+                calculate: "حساب المعدل",
+                remove: "إزالة",
+                semesterGPA: "معدل الفصل الحالي",
+                cumulativeGPA: "المعدل التراكمي",
+                totalCredits: "إجمالي الساعات"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            
+            // Update button text
+            document.getElementById('langText').textContent = currentLang === 'en' ? 'عربي' : 'English';
+            
+            // Update text content
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                el.textContent = translations[currentLang][key];
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                el.placeholder = translations[currentLang][key];
+            });
+        }
+
+        function addCourse() {
+            const courseItem = document.createElement('div');
+            courseItem.className = 'course-item';
+            courseItem.innerHTML = `
+                <input type="text" class="subject-name" data-i18n-placeholder="subject" placeholder="${translations[currentLang].subject}">
+                <select class="grade">
+                    <option value="4.0">A+</option>
+                    <option value="3.75">A</option>
+                    <option value="3.5">B+</option>
+                    <option value="3.0">B</option>
+                    <option value="2.5">C+</option>
+                    <option value="2.0">C</option>
+	            <option value="1.5">D+</option>
+                    <option value="1.0">D</option>
+                    <option value="0">F</option>
+                </select>
+                <input type="number" class="credits" data-i18n-placeholder="credits" placeholder="${translations[currentLang].credits}" min="1" value="3">
+                <button class="remove-btn" onclick="removeCourse(this)" data-i18n="remove">${translations[currentLang].remove}</button>
+            `;
+            document.getElementById('courseList').appendChild(courseItem);
+        }
+
+        function removeCourse(button) {
+            button.closest('.course-item').remove();
+        }
+
+        function calculateGPA() {
+            const courses = document.getElementsByClassName('course-item');
+            let currentPoints = 0;
+            let currentCredits = 0;
+
+            for (let course of courses) {
+                const grade = parseFloat(course.querySelector('.grade').value);
+                const credits = parseFloat(course.querySelector('.credits').value);
+                
+                if (!credits || credits < 1) {
+                    alert(currentLang === 'en' 
+                        ? 'Please enter valid credit hours for all courses'
+                        : 'الرجاء إدخال ساعات معتمدة صحيحة لجميع المواد');
+                    return;
+                }
+
+                currentPoints += grade * credits;
+                currentCredits += credits;
+            }
+
+            if (currentCredits === 0) {
+                alert(currentLang === 'en' 
+                    ? 'Please add at least one course'
+                    : 'الرجاء إضافة مادة واحدة على الأقل');
+                return;
+            }
+
+            const semesterGPA = currentPoints / currentCredits;
+            const previousCredits = parseFloat(document.getElementById('previousCredits').value) || 0;
+            const previousGPA = parseFloat(document.getElementById('previousGPA').value) || 0;
+            
+            let totalGPA = semesterGPA;
+            let totalCredits = currentCredits;
+            
+            if (previousCredits > 0) {
+                totalGPA = ((previousGPA * previousCredits) + currentPoints) / (previousCredits + currentCredits);
+                totalCredits = previousCredits + currentCredits;
+            }
+
+            const t = translations[currentLang];
+            document.getElementById('result').innerHTML = `
+                ${previousCredits > 0 ? `
+                    ${t.semesterGPA}: ${semesterGPA.toFixed(2)}<br>
+                    ${t.cumulativeGPA}: ${totalGPA.toFixed(2)}<br>
+                    ${t.totalCredits}: ${totalCredits}
+                ` : `
+                    ${t.semesterGPA}: ${semesterGPA.toFixed(2)}<br>
+                    ${t.totalCredits}: ${totalCredits}
+                `}
+            `;
+        }
+    </script>
+</body>
+</html>
